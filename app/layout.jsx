@@ -1,11 +1,12 @@
-﻿import "./globals.css";
+import "./globals.css";
+import { PawTrail } from "@/components/paw-trail";
 
 export const metadata = {
   title: {
     default: "t Snuffeltje",
     template: "%s | t Snuffeltje"
   },
-  description: "Trimsalon, bodywork, massage en fitness voor honden in Boortmeerbeek.",
+  description: "Trimsalon voor honden in Boortmeerbeek, met vachtverzorging, puppygewenning en advies op maat.",
   icons: {
     icon: "/images/favicon/favicon.ico",
     apple: "/images/favicon/apple-touch-icon.png"
@@ -15,7 +16,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="nl">
-      <body>{children}</body>
+      <body>
+        <PawTrail />
+        {children}
+      </body>
     </html>
   );
 }

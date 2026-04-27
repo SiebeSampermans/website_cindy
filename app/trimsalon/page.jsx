@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
 import { pages } from "@/lib/content";
 
@@ -27,7 +27,7 @@ export default function TrimsalonPage() {
               <div className="image-strip">
                 {section.images.map((image) => (
                   <div key={image} className="card">
-                    <img src={image} alt={section.heading} />
+                    <img src={image} alt={section.heading} className={image.includes("puppy2") ? "focus-face" : undefined} />
                   </div>
                 ))}
               </div>
@@ -35,22 +35,29 @@ export default function TrimsalonPage() {
           </section>
         ))}
 
-        <section className="card">
-          <img src="/images/product/Hownd.jpg" alt="Hownd producten" />
-          <h3>Producten van Hownd</h3>
-          <p>
-            Er wordt gewerkt met natuurlijke en dierproefvrije producten van Hownd, mild voor
-            huid en vacht en geschikt voor een zachte, bewuste verzorging.
-          </p>
-          <Link
-            href="https://groomerplanet.com/app/book/?salon=799286532"
-            className="button-link"
-            target="_blank"
-          >
-            Boek een afspraak
-          </Link>
+        <section className="section product-feature">
+          <div className="product-feature-media">
+            <img src="/images/product/Hownd.jpg" alt="Hownd producten" />
+          </div>
+          <div className="product-feature-body">
+            <p className="eyebrow">Producten</p>
+            <h2>Producten van Hownd</h2>
+            <p>
+              Er wordt gewerkt met natuurlijke en dierproefvrije producten van Hownd, mild voor
+              huid en vacht en geschikt voor een zachte, bewuste verzorging.
+            </p>
+            <Link
+              href="https://groomerplanet.com/app/book/?salon=799286532"
+              className="button-link"
+              target="_blank"
+            >
+              Boek een afspraak
+            </Link>
+          </div>
         </section>
       </div>
     </PageShell>
   );
 }
+
+

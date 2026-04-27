@@ -1,4 +1,4 @@
-﻿import { PageShell } from "@/components/page-shell";
+import { PageShell } from "@/components/page-shell";
 
 export const metadata = {
   title: "Contact"
@@ -37,15 +37,16 @@ export default async function ContactPage({ searchParams }) {
         {statusMessage ? <section className={statusMessage.className}>{statusMessage.text}</section> : null}
 
         <section className="contact-layout">
-          <div className="map-card">
+          <section className="section map-card">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d10048.164187285469!2d4.5553424!3d50.9784319!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c3e113f31b0b2f%3A0x34daf55d4130e50a!2sKorenweg%2029%2C%203190%20Boortmeerbeek!5e0!3m2!1snl!2sbe!4v1707387219825!5m2!1snl!2sbe"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               title="Kaart t Snuffeltje"
             />
-          </div>
-          <div className="section">
+          </section>
+
+          <section className="section contact-form-card">
             <form action="/api/contact" method="POST" className="form-grid">
               <div className="field">
                 <label htmlFor="naam">Naam</label>
@@ -73,7 +74,7 @@ export default async function ContactPage({ searchParams }) {
                 Verzenden
               </button>
             </form>
-          </div>
+          </section>
         </section>
       </div>
     </PageShell>
