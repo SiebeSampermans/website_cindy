@@ -33,6 +33,24 @@ export function CircularGallery({ images }) {
     };
   }, [isLightboxOpen, isMounted]);
 
+  useEffect(() => {
+    if (!isLightboxOpen) {
+      return undefined;
+    }
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setIsLightboxOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isLightboxOpen]);
+
   const orbitItems = useMemo(
     () =>
       images.map((image, index) => {
@@ -50,6 +68,30 @@ export function CircularGallery({ images }) {
   );
 
   const activeImage = images[activeIndex];
+  const lightbox = (
+    <div
+      className="gallery-lightbox"
+      role="dialog"
+      aria-modal="true"
+      aria-label={activeImage.alt}
+      onClick={() => setIsLightboxOpen(false)}
+    >
+      <button
+        type="button"
+        className="gallery-lightbox-close"
+        onClick={(event) => {
+          event.stopPropagation();
+          setIsLightboxOpen(false);
+        }}
+        aria-label="Sluit foto"
+      >
+        Sluiten
+      </button>
+      <div className="gallery-lightbox-content" onClick={(event) => event.stopPropagation()}>
+        <img src={activeImage.full} alt={activeImage.alt} />
+      </div>
+    </div>
+  );
 
   return (
     <section className="circular-gallery-shell">
@@ -128,31 +170,7 @@ export function CircularGallery({ images }) {
         </div>
       </div>
 
-      {isMounted && isLightboxOpen
-        ? createPortal(
-          <div
-            className="gallery-lightbox"
-            role="dialog"
-            aria-modal="true"
-            aria-label={activeImage.alt}
-            onClick={() => setIsLightboxOpen(false)}
-          >
-            <button
-              type="button"
-              className="gallery-lightbox-close"
-              onClick={() => setIsLightboxOpen(false)}
-              aria-label="Sluit foto"
-            >
-              Sluiten
-            </button>
-            <div className="gallery-lightbox-content" onClick={(event) => event.stopPropagation()}>
-              <img src={activeImage.full} alt={activeImage.alt} />
-            </div>
-          </div>
-          ,
-          document.body
-        )
-        : null}
+      {isMounted && isLightboxOpen ? createPortal(lightbox, document.body) : null}
     </section>
   );
 }

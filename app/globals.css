@@ -77,7 +77,7 @@ body::before {
   z-index: 0;
 }
 
-body > :not(.paw-trail-layer) {
+body > :not(.paw-trail-layer):not(.gallery-lightbox) {
   position: relative;
   z-index: 1;
 }
