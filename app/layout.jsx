@@ -1,4 +1,5 @@
 import "./globals.css";
+import { BackgroundBubbles } from "@/components/background-bubbles";
 import { PawTrail } from "@/components/paw-trail";
 
 export const metadata = {
@@ -17,6 +18,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="nl">
       <body>
+        <BackgroundBubbles />
         <PawTrail />
         {children}
       </body>

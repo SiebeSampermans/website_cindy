@@ -38,48 +38,340 @@ body {
 }
 
 body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.78;
-  background:
-    radial-gradient(circle at 11% 14%, transparent 0 3.15rem, rgba(143, 79, 45, 0.2) 3.2rem 3.45rem, transparent 3.55rem),
-    radial-gradient(circle at 15% 18%, rgba(143, 79, 45, 0.05) 0 1.8rem, transparent 1.85rem),
-    radial-gradient(circle at 79% 11%, transparent 0 2.6rem, rgba(160, 93, 58, 0.19) 2.65rem 2.95rem, transparent 3.05rem),
-    radial-gradient(circle at 74% 16%, rgba(160, 93, 58, 0.045) 0 1.4rem, transparent 1.45rem),
-    radial-gradient(circle at 24% 37%, transparent 0 4.4rem, rgba(199, 125, 74, 0.16) 4.45rem 4.85rem, transparent 5rem),
-    radial-gradient(circle at 28% 33%, rgba(199, 125, 74, 0.035) 0 2.6rem, transparent 2.7rem),
-    radial-gradient(circle at 67% 42%, transparent 0 3.4rem, rgba(143, 79, 45, 0.18) 3.45rem 3.8rem, transparent 3.95rem),
-    radial-gradient(circle at 63% 46%, rgba(143, 79, 45, 0.04) 0 1.9rem, transparent 2rem),
-    radial-gradient(circle at 14% 71%, transparent 0 2.8rem, rgba(160, 93, 58, 0.18) 2.85rem 3.15rem, transparent 3.25rem),
-    radial-gradient(circle at 18% 75%, rgba(160, 93, 58, 0.04) 0 1.45rem, transparent 1.55rem),
-    radial-gradient(circle at 82% 68%, transparent 0 4.8rem, rgba(143, 79, 45, 0.15) 4.85rem 5.25rem, transparent 5.45rem),
-    radial-gradient(circle at 78% 73%, rgba(143, 79, 45, 0.03) 0 2.4rem, transparent 2.55rem),
-    radial-gradient(circle at 48% 88%, transparent 0 3rem, rgba(199, 125, 74, 0.17) 3.05rem 3.35rem, transparent 3.45rem),
-    radial-gradient(circle at 52% 84%, rgba(199, 125, 74, 0.04) 0 1.55rem, transparent 1.65rem),
-    radial-gradient(circle at 34% 12%, transparent 0 2.1rem, rgba(143, 79, 45, 0.18) 2.15rem 2.4rem, transparent 2.5rem),
-    radial-gradient(circle at 38% 9%, rgba(143, 79, 45, 0.045) 0 1.1rem, transparent 1.2rem),
-    radial-gradient(circle at 57% 24%, transparent 0 2.7rem, rgba(160, 93, 58, 0.16) 2.75rem 3rem, transparent 3.1rem),
-    radial-gradient(circle at 54% 28%, rgba(160, 93, 58, 0.04) 0 1.35rem, transparent 1.45rem),
-    radial-gradient(circle at 89% 31%, transparent 0 2.2rem, rgba(199, 125, 74, 0.17) 2.25rem 2.5rem, transparent 2.6rem),
-    radial-gradient(circle at 85% 34%, rgba(199, 125, 74, 0.035) 0 1.2rem, transparent 1.3rem),
-    radial-gradient(circle at 9% 49%, transparent 0 2.4rem, rgba(143, 79, 45, 0.18) 2.45rem 2.7rem, transparent 2.8rem),
-    radial-gradient(circle at 13% 53%, rgba(143, 79, 45, 0.04) 0 1.25rem, transparent 1.35rem),
-    radial-gradient(circle at 46% 58%, transparent 0 1.9rem, rgba(160, 93, 58, 0.18) 1.95rem 2.2rem, transparent 2.3rem),
-    radial-gradient(circle at 49% 55%, rgba(160, 93, 58, 0.04) 0 1rem, transparent 1.1rem),
-    radial-gradient(circle at 61% 78%, transparent 0 2.35rem, rgba(143, 79, 45, 0.16) 2.4rem 2.7rem, transparent 2.8rem),
-    radial-gradient(circle at 58% 81%, rgba(143, 79, 45, 0.04) 0 1.2rem, transparent 1.3rem),
-    radial-gradient(circle at 91% 87%, transparent 0 2.8rem, rgba(199, 125, 74, 0.16) 2.85rem 3.15rem, transparent 3.25rem),
-    radial-gradient(circle at 87% 83%, rgba(199, 125, 74, 0.035) 0 1.35rem, transparent 1.45rem),
-    radial-gradient(circle at 29% 92%, transparent 0 2rem, rgba(143, 79, 45, 0.17) 2.05rem 2.3rem, transparent 2.4rem),
-    radial-gradient(circle at 25% 89%, rgba(143, 79, 45, 0.04) 0 1.05rem, transparent 1.15rem);
-  z-index: 0;
+  content: none;
 }
 
-body > :not(.paw-trail-layer):not(.gallery-lightbox) {
+body > :not(.paw-trail-layer):not(.gallery-lightbox):not(.background-bubbles-layer) {
   position: relative;
   z-index: 1;
+}
+
+.background-bubbles-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.background-bubbles-layer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.28), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(199, 125, 74, 0.12), transparent 30%);
+  opacity: 0.86;
+}
+
+.background-bubble {
+  position: absolute;
+  left: var(--bubble-left);
+  bottom: -8rem;
+  width: var(--bubble-size);
+  height: var(--bubble-size);
+  margin-left: calc(var(--bubble-size) / -2);
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  pointer-events: auto;
+  cursor: var(--cursor-paw-pointer);
+  animation: bubble-float var(--bubble-duration) linear infinite;
+  animation-delay: var(--bubble-delay);
+  will-change: transform, opacity;
+}
+
+.background-bubble-shell {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.34), transparent 36%),
+    rgba(255, 255, 255, 0.06);
+  box-shadow:
+    inset 0 0 0 1.5px rgba(143, 79, 45, 0.34),
+    inset 0 0 0 0.55rem rgba(255, 255, 255, 0.09),
+    0 0 1.5rem rgba(199, 125, 74, 0.1);
+  opacity: var(--bubble-opacity);
+}
+
+.background-bubble-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 0.14rem solid rgba(199, 125, 74, 0.24);
+  opacity: 0.92;
+}
+
+.background-bubble-core {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 32% 30%, rgba(255, 255, 255, 0.5), transparent 48%),
+    radial-gradient(circle at 65% 68%, rgba(199, 125, 74, 0.16), transparent 72%);
+  transform: none;
+}
+
+.background-bubble-pop-ring,
+.background-bubble-pop-flash {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 999px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.background-bubble-pop-ring {
+  width: 100%;
+  height: 100%;
+  margin-left: -50%;
+  margin-top: -50%;
+  border: 0.18rem solid rgba(255, 255, 255, 0);
+  transform: scale(0.78);
+}
+
+.background-bubble-pop-flash {
+  width: 36%;
+  height: 36%;
+  margin-left: -18%;
+  margin-top: -18%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0));
+  filter: blur(0.08rem);
+  transform: scale(0.5);
+}
+
+.background-bubble-burst {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0.8rem;
+  height: 0.8rem;
+  margin-left: -0.4rem;
+  margin-top: -0.4rem;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.96) 0 42%, rgba(199, 125, 74, 0.7) 43% 68%, transparent 72%);
+  opacity: 0;
+  transform: translate3d(0, 0, 0) scale(0.4);
+  filter: drop-shadow(0 0 0.45rem rgba(255, 255, 255, 0.55));
+}
+
+.background-bubble-burst-a {
+  --burst-x: -2.6rem;
+  --burst-y: -2rem;
+}
+
+.background-bubble-burst-b {
+  --burst-x: 2.9rem;
+  --burst-y: -1.7rem;
+}
+
+.background-bubble-burst-c {
+  --burst-x: -2rem;
+  --burst-y: 2.8rem;
+}
+
+.background-bubble-burst-d {
+  --burst-x: 2.5rem;
+  --burst-y: 2.35rem;
+}
+
+.background-bubble.is-popping {
+  pointer-events: none;
+  animation-play-state: paused;
+}
+
+.background-bubble.is-popping .background-bubble-shell {
+  animation: bubble-shell-pop 520ms ease-out forwards;
+}
+
+.background-bubble.is-popping .background-bubble-shell::before {
+  animation: bubble-shell-outline-pop 520ms ease-out forwards;
+}
+
+.background-bubble.is-popping .background-bubble-core {
+  animation: bubble-core-collapse 520ms ease-out forwards;
+}
+
+.background-bubble.is-popping .background-bubble-pop-ring {
+  animation: bubble-pop-ring 1.1s ease-out forwards;
+}
+
+.background-bubble.is-popping .background-bubble-pop-flash {
+  animation: bubble-pop-flash 540ms ease-out forwards;
+}
+
+.background-bubble.is-popping .background-bubble-burst {
+  animation: bubble-pop-burst 1s ease-out forwards;
+}
+
+@keyframes bubble-float {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.92);
+  }
+
+  15% {
+    transform: translate3d(calc(var(--bubble-drift) * -0.35), -18vh, 0) scale(1);
+  }
+
+  45% {
+    transform: translate3d(var(--bubble-drift), -52vh, 0) scale(1.04);
+  }
+
+  72% {
+    transform: translate3d(calc(var(--bubble-drift) * -0.45), -86vh, 0) scale(0.99);
+  }
+
+  100% {
+    transform: translate3d(calc(var(--bubble-drift) * 0.2), -125vh, 0) scale(0.94);
+  }
+}
+
+.background-bubble:hover {
+  filter: brightness(1.08);
+}
+
+@keyframes bubble-shell-pop {
+  0% {
+    opacity: var(--bubble-opacity);
+    transform: scale(1);
+  }
+
+  12% {
+    opacity: calc(var(--bubble-opacity) * 0.95);
+    transform: scale(1.04);
+  }
+
+  32% {
+    opacity: 0.22;
+    transform: scale(0.72);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.46);
+  }
+}
+
+@keyframes bubble-shell-outline-pop {
+  0% {
+    opacity: 0.92;
+    transform: scale(1);
+  }
+
+  30% {
+    opacity: 0.55;
+    transform: scale(0.86);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+@keyframes bubble-pop-ring {
+  0% {
+    opacity: 0;
+    transform: scale(0.82);
+    border-color: rgba(255, 255, 255, 0.95);
+    border-width: 0.24rem;
+  }
+
+  16% {
+    opacity: 0.96;
+    transform: scale(1.35);
+    border-color: rgba(255, 255, 255, 0.9);
+    border-width: 0.2rem;
+  }
+
+  42% {
+    opacity: 0.74;
+    transform: scale(2.05);
+    border-color: rgba(255, 255, 255, 0.8);
+    border-width: 0.14rem;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(2.9);
+    border-color: rgba(199, 125, 74, 0);
+    border-width: 0;
+  }
+}
+
+@keyframes bubble-pop-flash {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+
+  18% {
+    opacity: 1;
+    transform: scale(1.55);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}
+
+@keyframes bubble-core-collapse {
+  0% {
+    opacity: 1;
+    transform: scale(var(--bubble-inner-scale));
+    filter: blur(0);
+  }
+
+  12% {
+    opacity: 0.9;
+    transform: scale(calc(var(--bubble-inner-scale) * 1.12));
+    filter: blur(0);
+  }
+
+  24% {
+    opacity: 0.22;
+    transform: scale(calc(var(--bubble-inner-scale) * 0.52));
+    filter: blur(0.08rem);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(calc(var(--bubble-inner-scale) * 0.18));
+    filter: blur(0.16rem);
+  }
+}
+
+@keyframes bubble-pop-burst {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.25);
+  }
+
+  10% {
+    opacity: 1;
+    transform: translate3d(calc(var(--burst-x) * 0.12), calc(var(--burst-y) * 0.12), 0) scale(1.3);
+  }
+
+  24% {
+    opacity: 0.98;
+    transform: translate3d(calc(var(--burst-x) * 0.62), calc(var(--burst-y) * 0.62), 0) scale(1.4);
+  }
+
+  42% {
+    opacity: 0.8;
+    transform: translate3d(var(--burst-x), var(--burst-y), 0) scale(1.18);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(calc(var(--burst-x) * 1.9), calc(var(--burst-y) * 1.9), 0) scale(0.22);
+  }
 }
 
 .paw-trail-layer {
@@ -1395,6 +1687,19 @@ textarea {
 }
 
 @media (max-width: 820px) {
+  .site-shell,
+  .page,
+  .site-footer,
+  .admin-shell {
+    width: min(100% - 1.25rem, 1120px);
+  }
+
+  .header-shell {
+    margin-top: 0.75rem;
+    padding: 0.9rem 0.9rem 1rem;
+    border-radius: 1.6rem;
+  }
+
   .topbar,
   .grid-2,
   .contact-layout,
@@ -1412,15 +1717,36 @@ textarea {
   .topbar {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
+    gap: 0.8rem;
+    padding-bottom: 0.7rem;
+  }
+
+  .brand {
+    gap: 0.7rem;
+    min-width: 0;
+  }
+
+  .brand-mark {
+    width: 3.75rem;
+    height: 3.75rem;
+  }
+
+  .brand strong,
+  .brand small {
+    display: block;
+    line-height: 1.2;
   }
 
   .header-actions {
     justify-self: end;
+    gap: 0.65rem;
   }
 
   .menu-toggle {
     display: inline-flex;
     flex-shrink: 0;
+    width: 3.5rem;
+    height: 3.5rem;
   }
 
   .main-nav {
@@ -1444,6 +1770,7 @@ textarea {
     width: 100%;
     justify-content: center;
     text-align: center;
+    padding: 0.9rem 1rem;
   }
 
   .socials {
@@ -1466,10 +1793,49 @@ textarea {
     width: auto;
     inset: auto;
     transform: none;
+    padding: 0.45rem;
   }
 
   .home-gallery-card:nth-child(2) {
     transform: none;
+  }
+
+  .page {
+    padding: 1.4rem 0 3rem;
+  }
+
+  .page-hero,
+  .section,
+  .notice,
+  .status-box,
+  .admin-panel {
+    border-radius: 1.4rem;
+    padding: 1.2rem;
+  }
+
+  .page-hero {
+    margin: 1.25rem 0;
+  }
+
+  .page-hero h1 {
+    font-size: clamp(2rem, 9vw, 3rem);
+    line-height: 1.05;
+  }
+
+  .home-intro-copy h2,
+  .home-story-copy h2,
+  .home-cta h2 {
+    font-size: clamp(1.8rem, 8vw, 2.55rem);
+    line-height: 1.08;
+  }
+
+  .home-actions {
+    gap: 0.7rem;
+  }
+
+  .home-story-media,
+  .home-photo-stack {
+    order: -1;
   }
 
   .home-story-media img,
@@ -1523,6 +1889,113 @@ textarea {
   .gallery-lane-track-slow,
   .gallery-lane-track-medium {
     animation-duration: 28s;
+  }
+}
+
+@media (max-width: 560px) {
+  .background-bubbles-layer {
+    display: none;
+  }
+
+  .site-shell,
+  .page,
+  .site-footer,
+  .admin-shell {
+    width: min(100% - 1rem, 1120px);
+  }
+
+  .topbar {
+    grid-template-columns: 1fr;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .socials {
+    gap: 0.55rem;
+  }
+
+  .main-nav {
+    padding: 0.8rem;
+  }
+
+  .nav-link,
+  .button-link,
+  .button-secondary,
+  .button-inline,
+  .button-danger {
+    width: 100%;
+  }
+
+  .button-link,
+  .button-secondary,
+  .button-inline,
+  .button-danger {
+    padding: 0.95rem 1rem;
+  }
+
+  .home-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .home-highlight-list {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .home-highlight-item {
+    width: 100%;
+    text-align: center;
+    padding: 0.75rem 0.9rem;
+  }
+
+  .home-intro,
+  .home-story,
+  .home-cta {
+    gap: 1rem;
+  }
+
+  .home-photo-stack {
+    gap: 0.8rem;
+  }
+
+  .home-photo img,
+  .home-story-media img,
+  .home-gallery-card img {
+    border-radius: 0.9rem;
+  }
+
+  .home-photo-main img,
+  .home-photo-top img,
+  .home-photo-bottom img,
+  .home-story-media img,
+  .home-gallery-card img {
+    aspect-ratio: 4 / 3;
+  }
+
+  .home-story-media img,
+  .home-gallery-card img {
+    min-height: 13rem;
+  }
+
+  .footer-grid {
+    padding: 1.2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .background-bubble {
+    animation: none;
+    transform: none;
+  }
+
+  .background-bubble.is-popping {
+    animation: none;
+    opacity: 0;
   }
 }
 
