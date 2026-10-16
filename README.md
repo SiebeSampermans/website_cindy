@@ -31,7 +31,9 @@ Hoe het werkt:
 
 - Teksten, popups en mailtemplates staan in de bestaande MySQL-databank. De nieuwe tabellen (`tbl_site_content`, `tbl_popup`, `tbl_mail_template`) worden automatisch aangemaakt bij het eerste gebruik (zie `lib/schema.js`).
 - De standaardteksten staan in `lib/content-registry.js`. Zolang er niets aangepast is, toont de site die. Als de databank onbereikbaar is, blijft de site werken met de standaardteksten.
-- Geüploade afbeeldingen komen in `UPLOAD_DIR` (standaard `./uploads`) en worden geserveerd via `/media/<bestand>`. Die map moet bewaard blijven bij een nieuwe deploy. Op een serverless host zonder blijvende schijf (bv. Vercel) moet dit vervangen worden door objectopslag.
+- Geüploade afbeeldingen: op **Vercel** in Vercel Blob (maak in het Vercel-project een Blob store aan via Storage; dan staat `BLOB_READ_WRITE_TOKEN` automatisch klaar). Zonder die variabele komen ze in `UPLOAD_DIR` (standaard `./uploads`) en worden ze geserveerd via `/media/<bestand>`. Grote foto's worden in de browser verkleind voor de upload.
+- De lijst van bestaande site-afbeeldingen (`lib/site-images.json`) wordt bij `npm run dev` en `npm run build` opnieuw gemaakt.
+- Eerste admin aanmaken (of een wachtwoord resetten zonder mail): `npm run create-admin -- jouw@email.be Voornaam Achternaam`. Dit gebruikt de databankgegevens uit `.env.local` en vraagt het wachtwoord in de terminal.
 - Inloggen gebeurt in `app/api/admin/login/route.js`: wachtwoord controleren en daarna de sessiecookie zetten. Tweestapsverificatie (2FA) kan later tussen die twee stappen worden toegevoegd.
 
 ## Benodigd

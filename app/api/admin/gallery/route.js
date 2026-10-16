@@ -1,7 +1,6 @@
 import { requireAdmin, redirectTo, formString } from "@/lib/admin-route";
 import { getSiteContent, resetContentValues, saveContentValues } from "@/lib/cms";
 import { GALLERY_KEY, isSafeImage } from "@/lib/content-registry";
-import { saveUpload } from "@/lib/media";
 
 const PAGE = "/admin/gallerij";
 
@@ -19,7 +18,6 @@ export async function POST(request) {
 
   const content = await getSiteContent();
   let images = [...content[GALLERY_KEY]];
-  let error;
 
   if (action === "save") {
     images = images.map((image, index) => ({
@@ -41,19 +39,8 @@ export async function POST(request) {
   } else if (action === "add") {
     const urls = formData.getAll("urls").map(String).filter(isSafeImage);
     images.push(...urls.map((url) => ({ thumb: url, full: url, alt: "Foto t Snuffeltje" })));
-  } else if (action === "upload") {
-    const files = formData.getAll("files").filter((file) => typeof file === "object" && file.size > 0);
-
-    for (const file of files) {
-      try {
-        const url = await saveUpload(file);
-        images.push({ thumb: url, full: url, alt: "Foto t Snuffeltje" });
-      } catch (uploadError) {
-        error = uploadError.message;
-      }
-    }
   }
 
   await saveContentValues([[GALLERY_KEY, images]], session.id);
-  return redirectTo(request, PAGE, { status: error ? undefined : "saved", error });
+  return redirectTo(request, PAGE, { status: "saved" });
 }

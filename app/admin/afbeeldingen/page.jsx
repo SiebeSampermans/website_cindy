@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { AdminShell } from "@/components/admin/admin-shell";
+import { UploadForm } from "@/components/admin/upload-form";
 import { listSiteImages, listUploads } from "@/lib/media";
 import { getSession } from "@/lib/session";
 
@@ -37,15 +38,10 @@ export default async function AdminMediaPage({ searchParams }) {
     >
       <section className="admin-panel">
         <h2>Nieuwe afbeeldingen uploaden</h2>
-        <form action="/api/admin/media" method="POST" encType="multipart/form-data" className="form-grid">
-          <div className="field">
-            <label htmlFor="files">Kies één of meerdere foto's (JPG, PNG, WEBP of GIF, max. 10 MB per foto)</label>
-            <input id="files" name="files" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple required />
-          </div>
-          <button type="submit" className="button-link">
-            Uploaden
-          </button>
-        </form>
+        <UploadForm
+          label="Kies één of meerdere foto's (JPG, PNG, WEBP of GIF). Grote foto's worden automatisch verkleind."
+          buttonLabel="Uploaden"
+        />
       </section>
 
       <section className="admin-panel">
@@ -62,7 +58,7 @@ export default async function AdminMediaPage({ searchParams }) {
                   <span>{formatSize(item.size)}</span>
                 </figcaption>
                 <form action="/api/admin/media/delete" method="POST">
-                  <input type="hidden" name="name" value={item.name} />
+                  <input type="hidden" name="url" value={item.url} />
                   <button type="submit" className="button-danger">
                     Verwijderen
                   </button>

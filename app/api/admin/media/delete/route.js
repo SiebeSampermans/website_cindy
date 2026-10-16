@@ -1,20 +1,19 @@
 import { requireAdmin, redirectTo, formString } from "@/lib/admin-route";
 import { getPopups, getStoredContent } from "@/lib/cms";
-import { deleteUpload, isValidMediaName, mediaUrl } from "@/lib/media";
+import { deleteUpload } from "@/lib/media";
 
 export async function POST(request) {
   const { response } = await requireAdmin(request);
   if (response) return response;
 
   const formData = await request.formData();
-  const name = formString(formData, "name", 200);
+  const url = formString(formData, "url", 1000);
 
-  if (!isValidMediaName(name)) {
+  if (!url) {
     return redirectTo(request, "/admin/afbeeldingen");
   }
 
   // Niet verwijderen als de afbeelding nog ergens op de site gebruikt wordt.
-  const url = mediaUrl(name);
   const [content, popups] = await Promise.all([getStoredContent(), getPopups()]);
   const inUse =
     Object.values(content).some((value) => JSON.stringify(value).includes(url)) ||
@@ -25,7 +24,7 @@ export async function POST(request) {
   }
 
   try {
-    await deleteUpload(name);
+    await deleteUpload(url);
   } catch {
     return redirectTo(request, "/admin/afbeeldingen", { error: "De afbeelding kon niet verwijderd worden." });
   }

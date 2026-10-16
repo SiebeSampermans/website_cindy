@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { uploadImages } from "@/components/admin/upload-utils";
 
 // Kies een afbeelding uit de bibliotheek of upload er meteen een nieuwe.
 export function ImagePicker({ name, defaultValue = "", options = [], required = false, allowEmpty = false }) {
@@ -18,21 +19,14 @@ export function ImagePicker({ name, defaultValue = "", options = [], required = 
     setError("");
 
     try {
-      const body = new FormData();
-      files.forEach((file) => body.append("files", file));
-      const response = await fetch("/api/admin/media", {
-        method: "POST",
-        body,
-        headers: { Accept: "application/json" }
-      });
-      const result = await response.json();
+      const { urls, errors } = await uploadImages(files);
+      if (!urls.length) throw new Error(errors[0] || "Upload mislukt.");
 
-      if (!response.ok) throw new Error(result.error || "Upload mislukt.");
-
-      const added = result.urls.map((url) => ({ url, label: url.replace("/media/", ""), group: "Uploads" }));
+      const added = urls.map((url) => ({ url, label: url.split("/").pop(), group: "Uploads" }));
       setChoices((current) => [...added, ...current]);
-      setValue(result.urls[0]);
+      setValue(urls[0]);
       setOpen(false);
+      if (errors.length) setError(errors.join(" "));
     } catch (uploadError) {
       setError(uploadError.message);
     } finally {

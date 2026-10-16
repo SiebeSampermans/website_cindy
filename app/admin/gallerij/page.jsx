@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AdminShell } from "@/components/admin/admin-shell";
+import { UploadForm } from "@/components/admin/upload-form";
 import { getSiteContent } from "@/lib/cms";
 import { GALLERY_KEY } from "@/lib/content-registry";
 import { listImageOptions } from "@/lib/media";
@@ -83,16 +84,7 @@ export default async function AdminGalleryPage({ searchParams }) {
       <section className="admin-grid">
         <article className="admin-panel">
           <h2>Nieuwe foto's uploaden</h2>
-          <form action="/api/admin/gallery" method="POST" encType="multipart/form-data" className="form-grid">
-            <input type="hidden" name="action" value="upload" />
-            <div className="field">
-              <label htmlFor="files">Foto's (worden achteraan de gallerij toegevoegd)</label>
-              <input id="files" name="files" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple required />
-            </div>
-            <button type="submit" className="button-link">
-              Uploaden en toevoegen
-            </button>
-          </form>
+          <UploadForm label="Foto's (worden achteraan de gallerij toegevoegd)" buttonLabel="Uploaden en toevoegen" addToGallery />
         </article>
 
         <article className="admin-panel">
