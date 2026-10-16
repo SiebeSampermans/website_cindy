@@ -29,11 +29,12 @@ Na het inloggen kan de eigenaar zelf aanpassen:
 
 Hoe het werkt:
 
-- Teksten, popups en mailtemplates staan in de bestaande MySQL-databank. De nieuwe tabellen (`tbl_site_content`, `tbl_popup`, `tbl_mail_template`) worden automatisch aangemaakt bij het eerste gebruik (zie `lib/schema.js`).
+- Teksten, popups, mailtemplates en gebruikers staan in een Postgres-databank (op Vercel: Storage → Neon, dan staat `DATABASE_URL` automatisch klaar). Alle tabellen worden automatisch aangemaakt bij het eerste gebruik (zie `lib/schema.js`); een lege databank is genoeg.
 - De standaardteksten staan in `lib/content-registry.js`. Zolang er niets aangepast is, toont de site die. Als de databank onbereikbaar is, blijft de site werken met de standaardteksten.
 - Geüploade afbeeldingen: op **Vercel** in Vercel Blob (maak in het Vercel-project een Blob store aan via Storage; dan staat `BLOB_READ_WRITE_TOKEN` automatisch klaar). Zonder die variabele komen ze in `UPLOAD_DIR` (standaard `./uploads`) en worden ze geserveerd via `/media/<bestand>`. Grote foto's worden in de browser verkleind voor de upload.
 - De lijst van bestaande site-afbeeldingen (`lib/site-images.json`) wordt bij `npm run dev` en `npm run build` opnieuw gemaakt.
-- Eerste admin aanmaken (of een wachtwoord resetten zonder mail): `npm run create-admin -- jouw@email.be Voornaam Achternaam`. Dit gebruikt de databankgegevens uit `.env.local` en vraagt het wachtwoord in de terminal.
+- Eerste admin aanmaken: stel `ADMIN_SETUP_CODE` in, open `/admin/login` en vul de setupcode in. Dat formulier verschijnt enkel zolang er nog geen enkele gebruiker bestaat.
+- Wachtwoord resetten zonder mail: `npm run create-admin -- jouw@email.be Voornaam Achternaam` (gebruikt `DATABASE_URL` uit `.env.local` en vraagt het wachtwoord in de terminal).
 - Inloggen gebeurt in `app/api/admin/login/route.js`: wachtwoord controleren en daarna de sessiecookie zetten. Tweestapsverificatie (2FA) kan later tussen die twee stappen worden toegevoegd.
 
 ## Benodigd
@@ -41,7 +42,7 @@ Hoe het werkt:
 1. Installeer Node.js 20 of nieuwer.
 2. Voer `npm install` uit.
 3. Kopieer `.env.example` naar `.env.local`.
-4. Vul de databank- en mailinstellingen in.
+4. Vul `DATABASE_URL`, `ADMIN_SETUP_CODE`, `SESSION_SECRET` en de mailinstellingen in.
 5. Start lokaal met `npm run dev`.
 
 ## Belangrijke notities

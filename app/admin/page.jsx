@@ -54,11 +54,12 @@ export default async function AdminPage({ searchParams }) {
           <form action="/api/admin/message" method="POST" className="form-grid">
             <div className="field">
               <label htmlFor="titel">Titel</label>
-              <input id="titel" name="titel" defaultValue={notice?.title || ""} required />
+              <input id="titel" name="titel" defaultValue={notice?.title || ""} />
             </div>
             <div className="field">
               <label htmlFor="tekst">Tekst</label>
-              <textarea id="tekst" name="tekst" defaultValue={notice?.text || ""} required />
+              <textarea id="tekst" name="tekst" defaultValue={notice?.text || ""} />
+              <p className="field-hint">Maak titel en tekst leeg om de melding te verbergen.</p>
             </div>
             <button type="submit" className="button-link">
               Opslaan
