@@ -1,9 +1,11 @@
-﻿import { PageShell } from "@/components/page-shell";
-import { pages } from "@/lib/content";
+import { PageShell } from "@/components/page-shell";
+import { getSiteContent } from "@/lib/cms";
 
 export const metadata = {
   title: "Wie ben ik"
 };
+
+export const dynamic = "force-dynamic";
 
 const highlightedWords = [
   "gehoorzaamheid",
@@ -42,27 +44,31 @@ function renderHighlightedParagraph(paragraph) {
   });
 }
 
-export default function WiePage() {
-  const page = pages.wie;
+export default async function WiePage() {
+  const c = await getSiteContent();
+  const images = [
+    { src: c["wie.image1"], alt: "cindy haar honden" },
+    { src: c["wie.image2"], alt: "cindy" }
+  ];
 
   return (
-    <PageShell currentPath="/wie" eyebrow="Over Cindy" title={page.title}>
+    <PageShell currentPath="/wie" eyebrow="Over Cindy" title={c["wie.title"]} content={c}>
       <div className="stack">
         <section className="section biography-card">
-          {page.intro.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
+          {c["wie.intro"].map((paragraph, index) => (
+            <p key={index}>{paragraph}</p>
           ))}
         </section>
         <section className="image-strip">
-          {page.images.map((image) => (
-            <div key={image.src} className="card">
+          {images.map((image, index) => (
+            <div key={index} className="card">
               <img src={image.src} alt={image.alt} />
             </div>
           ))}
         </section>
         <section className="section biography-card">
-          {page.body.map((paragraph) => (
-            <p key={paragraph}>{renderHighlightedParagraph(paragraph)}</p>
+          {c["wie.body"].map((paragraph, index) => (
+            <p key={index}>{renderHighlightedParagraph(paragraph)}</p>
           ))}
         </section>
       </div>

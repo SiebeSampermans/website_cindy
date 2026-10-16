@@ -1,33 +1,9 @@
 import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
+import { getSiteContent } from "@/lib/cms";
 import { getHomepageNotice } from "@/lib/db";
 
-const homeHighlights = [
-  "Op afspraak en in alle rust",
-  "Puppygewenning met zachte aanpak",
-  "Verzorging op maat van vacht en karakter"
-];
-
-const homeServices = [
-  {
-    title: "Wassen en drogen",
-    text: "Een frisse, zachte vacht met producten die mild zijn voor huid en haar."
-  },
-  {
-    title: "Knippen en modelleren",
-    text: "Van praktische coupe tot rasgebonden afwerking, altijd in overleg."
-  },
-  {
-    title: "Puppygewenning",
-    text: "Een rustige eerste kennismaking met tafel, bad en geluiden van het salon."
-  }
-];
-
-const homeGallery = [
-  "/images/Gallerij/trimsalon_01.jpg",
-  "/images/Gallerij/puppygewenning_01.jpg",
-  "/images/Gallerij/trimsalon_03.jpg"
-];
+export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   let notice = null;
@@ -38,8 +14,15 @@ export default async function HomePage() {
     notice = null;
   }
 
+  const c = await getSiteContent();
+  const services = [1, 2, 3].map((number) => ({
+    title: c[`home.service${number}.title`],
+    text: c[`home.service${number}.text`]
+  }));
+  const gallery = [c["home.band.image1"], c["home.band.image2"], c["home.band.image3"]];
+
   return (
-    <PageShell currentPath="/" eyebrow="Welkom" title="Rustige, liefdevolle trimverzorging voor je hond.">
+    <PageShell currentPath="/" eyebrow="Welkom" title={c["home.title"]} content={c}>
       <div className="stack">
         {notice ? (
           <section className="notice">
@@ -51,16 +34,12 @@ export default async function HomePage() {
 
         <section className="section home-intro">
           <div className="home-intro-copy">
-            <p className="eyebrow">Trimsalon in Boortmeerbeek</p>
-            <h2>Een salongevoel dat zacht, warm en persoonlijk aanvoelt.</h2>
-            <p>
-              Bij t Snuffeltje draait het niet om snel werken, maar om een rustige verzorging
-              waarin jouw hond zich veilig mag voelen. Van puppy tot volwassen hond: elke afspraak
-              krijgt tijd, aandacht en een aanpak op maat.
-            </p>
+            <p className="eyebrow">{c["home.intro.eyebrow"]}</p>
+            <h2>{c["home.intro.title"]}</h2>
+            <p>{c["home.intro.text"]}</p>
             <div className="home-highlight-list">
-              {homeHighlights.map((item) => (
-                <p key={item} className="home-highlight-item">
+              {c["home.highlights"].map((item, index) => (
+                <p key={index} className="home-highlight-item">
                   {item}
                 </p>
               ))}
@@ -77,20 +56,20 @@ export default async function HomePage() {
 
           <div className="home-photo-stack" aria-label="Sfeerbeelden trimsalon">
             <figure className="home-photo home-photo-main">
-              <img src="/images/Gallerij/trimsalon_02.jpg" alt="Hond in het trimsalon" />
+              <img src={c["home.photo.main"]} alt="Hond in het trimsalon" />
             </figure>
             <figure className="home-photo home-photo-top">
-              <img src="/images/puppygewenning/puppy1_optafel.jpg" alt="Puppy op de trimtafel" />
+              <img src={c["home.photo.top"]} alt="Puppy op de trimtafel" />
             </figure>
             <figure className="home-photo home-photo-bottom">
-              <img src="/images/wie/cindy.jpeg" alt="Cindy van t Snuffeltje" />
+              <img src={c["home.photo.bottom"]} alt="Cindy van t Snuffeltje" />
             </figure>
           </div>
         </section>
 
         <section className="home-service-grid">
-          {homeServices.map((service) => (
-            <article key={service.title} className="section home-service-card">
+          {services.map((service, index) => (
+            <article key={index} className="section home-service-card">
               <p className="eyebrow">Verzorging</p>
               <h3>{service.title}</h3>
               <p>{service.text}</p>
@@ -100,19 +79,14 @@ export default async function HomePage() {
 
         <section className="section home-story">
           <div className="home-story-media">
-            <img src="/images/Home/trimsalon.jpg" alt="Verzorging in trimsalon t Snuffeltje" />
+            <img src={c["home.story.image"]} alt="Verzorging in trimsalon t Snuffeltje" />
           </div>
           <div className="home-story-copy">
-            <p className="eyebrow">Waarom t Snuffeltje</p>
-            <h2>Geen bandwerk, wel aandacht voor hond en eigenaar.</h2>
-            <p>
-              Voor een eerste afspraak bekijken we samen welke verzorging het best past bij de vacht,
-              het karakter en het gewenste model. Zo ontstaat een resultaat dat mooi oogt, maar ook
-              praktisch en comfortabel blijft voor je hond.
-            </p>
-            <p>
-              Ook voor puppygewenning en advies rond thuis onderhoud ben je hier welkom.
-            </p>
+            <p className="eyebrow">{c["home.story.eyebrow"]}</p>
+            <h2>{c["home.story.title"]}</h2>
+            {c["home.story.paragraphs"].map((paragraph, index) => (
+              <p key={index}>{paragraph}</p>
+            ))}
             <Link href="/wie" className="button-secondary">
               Leer Cindy kennen
             </Link>
@@ -120,8 +94,8 @@ export default async function HomePage() {
         </section>
 
         <section className="home-gallery-band">
-          {homeGallery.map((image, index) => (
-            <article key={image} className="card home-gallery-card">
+          {gallery.map((image, index) => (
+            <article key={index} className="card home-gallery-card">
               <img
                 src={image}
                 alt={`Sfeerbeeld trimsalon ${index + 1}`}
@@ -132,12 +106,9 @@ export default async function HomePage() {
         </section>
 
         <section className="section home-cta">
-          <p className="eyebrow">Klaar voor een frisse vacht?</p>
-          <h2>Plan een rustig trimmoment voor jouw hond.</h2>
-          <p>
-            Afspraken verlopen op maat en met tijd voor een zachte aanpak, zodat je hond met een
-            goed gevoel buiten stapt.
-          </p>
+          <p className="eyebrow">{c["home.cta.eyebrow"]}</p>
+          <h2>{c["home.cta.title"]}</h2>
+          <p>{c["home.cta.text"]}</p>
           <div className="home-actions">
             <Link href="/contact" className="button-link">
               Neem contact op

@@ -1,4 +1,5 @@
 import { PageShell } from "@/components/page-shell";
+import { getSiteContent } from "@/lib/cms";
 
 export const metadata = {
   title: "Contact"
@@ -19,19 +20,15 @@ function getStatusMessage(status) {
 export default async function ContactPage({ searchParams }) {
   const params = await searchParams;
   const statusMessage = getStatusMessage(params?.status);
+  const c = await getSiteContent();
 
   return (
-    <PageShell currentPath="/contact" eyebrow="Contact" title="Neem contact op">
+    <PageShell currentPath="/contact" eyebrow="Contact" title={c["contact.title"]} content={c}>
       <div className="stack">
         <section className="section">
-          <p>
-            Telefonisch bereikbaar van dinsdag tot vrijdag van 9u tot 19u. Als ik je oproep
-            niet meteen kan beantwoorden, spreek gerust een bericht in.
-          </p>
-          <p>
-            Heb je nog geen online account of wil je extra informatie? Gebruik dan gerust het
-            formulier hieronder.
-          </p>
+          {c["contact.intro"].map((paragraph, index) => (
+            <p key={index}>{paragraph}</p>
+          ))}
         </section>
 
         {statusMessage ? <section className={statusMessage.className}>{statusMessage.text}</section> : null}

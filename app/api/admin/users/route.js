@@ -1,29 +1,32 @@
-﻿import bcrypt from "bcryptjs";
-import { NextResponse } from "next/server";
-import { createUser } from "@/lib/db";
-import { getSession } from "@/lib/session";
+import bcrypt from "bcryptjs";
+import { requireAdmin, redirectTo, formString } from "@/lib/admin-route";
+import { createUser, findUserIdByEmail } from "@/lib/db";
 
-function redirectTo(url) {
-  return NextResponse.redirect(url, 303);
-}
+const EMAIL = /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/;
 
 export async function POST(request) {
-  const session = await getSession();
-
-  if (!session) {
-    return redirectTo(new URL("/admin/login", request.url));
-  }
+  const { response } = await requireAdmin(request);
+  if (response) return response;
 
   const formData = await request.formData();
-  const firstName = String(formData.get("vnaam") || "").trim();
-  const lastName = String(formData.get("naam") || "").trim();
-  const email = String(formData.get("email") || "").trim().toLowerCase();
+  const firstName = formString(formData, "vnaam", 100);
+  const lastName = formString(formData, "naam", 100);
+  const email = formString(formData, "email", 200).toLowerCase();
   const password = String(formData.get("wachtwoord") || "");
 
-  if (firstName && lastName && email && password) {
-    const passwordHash = await bcrypt.hash(password, 10);
-    await createUser({ firstName, lastName, email, passwordHash });
+  if (!firstName || !lastName || !EMAIL.test(email)) {
+    return redirectTo(request, "/admin/users", { status: "invalid" });
   }
 
-  return redirectTo(new URL("/admin/users?status=added", request.url));
+  if (password.length < 8) {
+    return redirectTo(request, "/admin/users", { status: "short-password" });
+  }
+
+  if (await findUserIdByEmail(email)) {
+    return redirectTo(request, "/admin/users", { status: "duplicate" });
+  }
+
+  const passwordHash = await bcrypt.hash(password, 10);
+  await createUser({ firstName, lastName, email, passwordHash });
+  return redirectTo(request, "/admin/users", { status: "added" });
 }

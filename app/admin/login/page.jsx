@@ -38,7 +38,7 @@ export default async function AdminLoginPage({ searchParams }) {
             </Link>
           </div>
           <h1>t Snuffeltje admin</h1>
-          <p>Log in om de melding op de homepage en de admingebruikers te beheren.</p>
+          <p>Log in om de teksten, foto's, popups, mails en gebruikers van de website te beheren.</p>
           {feedback ? <div className="status-box error">{feedback}</div> : null}
           <form action="/api/admin/login" method="POST" className="form-grid">
             <div className="field">

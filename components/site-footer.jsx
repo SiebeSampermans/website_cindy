@@ -1,7 +1,6 @@
-﻿import Link from "next/link";
-import { footerInfo } from "@/lib/content";
+import Link from "next/link";
 
-export function SiteFooter() {
+export function SiteFooter({ content }) {
   return (
     <footer className="site-footer">
       <div className="footer-grid">
@@ -13,20 +12,20 @@ export function SiteFooter() {
           />
         </div>
         <div>
-          <p className="footer-title">{footerInfo.name}</p>
-          {footerInfo.address.map((line) => (
-            <p key={line}>{line}</p>
+          <p className="footer-title">{content["footer.name"]}</p>
+          {content["footer.address"].map((line, index) => (
+            <p key={index}>{line}</p>
           ))}
         </div>
         <div>
           <p className="footer-title">Contact</p>
-          {footerInfo.contact.map((line) => (
-            <p key={line}>{line}</p>
+          {content["footer.contact"].map((line, index) => (
+            <p key={index}>{line}</p>
           ))}
         </div>
         <div>
           <p className="footer-title">Openingsuren</p>
-          <p>{footerInfo.hours}</p>
+          <p>{content["footer.hours"]}</p>
           <p className="footer-admin-link">
             <Link href="/admin/login">Admin</Link>
           </p>

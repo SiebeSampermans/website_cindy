@@ -1,7 +1,12 @@
-﻿import { SiteFooter } from "@/components/site-footer";
+import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { SitePopup } from "@/components/site-popup";
+import { getActivePopups, getSiteContent } from "@/lib/cms";
+import { popupMatchesPath } from "@/lib/popups";
 
-export function PageShell({ currentPath, title, eyebrow, children }) {
+export async function PageShell({ currentPath, title, eyebrow, content, children }) {
+  const [siteContent, popups] = await Promise.all([content || getSiteContent(), getActivePopups()]);
+
   return (
     <>
       <SiteHeader currentPath={currentPath} />
@@ -12,7 +17,8 @@ export function PageShell({ currentPath, title, eyebrow, children }) {
         </section>
         {children}
       </main>
-      <SiteFooter />
+      <SiteFooter content={siteContent} />
+      <SitePopup popups={popups.filter((popup) => popupMatchesPath(popup, currentPath))} />
     </>
   );
 }
