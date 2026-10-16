@@ -3,16 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "images": "node scripts/site-images.mjs",
+    "predev": "node scripts/site-images.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/site-images.mjs",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "create-admin": "node --env-file=.env.local scripts/create-admin.mjs"
   },
   "dependencies": {
+    "@vercel/blob": "^2.8.2",
     "bcryptjs": "^3.0.2",
-    "mysql2": "^3.15.2",
     "next": "^15.3.0",
     "nodemailer": "^6.10.1",
+    "pg": "^8.16.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   }

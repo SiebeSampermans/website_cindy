@@ -1,10 +1,14 @@
-﻿export const metadata = {
+export const metadata = {
   title: "Wachtwoord resetten"
 };
 
 function getMessage(status) {
   if (status === "success") {
     return { className: "status-box success", text: "Je wachtwoord is succesvol aangepast." };
+  }
+
+  if (status === "short") {
+    return { className: "status-box error", text: "Het wachtwoord moet minstens 8 tekens lang zijn." };
   }
 
   if (status === "invalid") {
@@ -30,7 +34,7 @@ export default async function ResetPasswordPage({ searchParams }) {
               <input type="hidden" name="token" value={token} />
               <div className="field">
                 <label htmlFor="nieuw_wachtwoord">Nieuw wachtwoord</label>
-                <input id="nieuw_wachtwoord" name="nieuw_wachtwoord" type="password" required />
+                <input id="nieuw_wachtwoord" name="nieuw_wachtwoord" type="password" minLength={8} required />
               </div>
               <button type="submit" className="button-link">
                 Wachtwoord instellen

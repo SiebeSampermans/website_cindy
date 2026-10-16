@@ -1,4 +1,4 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { updateHomepageNotice } from "@/lib/db";
 import { getSession } from "@/lib/session";
 
@@ -17,9 +17,8 @@ export async function POST(request) {
   const title = String(formData.get("titel") || "").trim();
   const text = String(formData.get("tekst") || "").trim();
 
-  if (title && text) {
-    await updateHomepageNotice(title, text);
-  }
+  // Een lege titel verbergt de melding op de homepage.
+  await updateHomepageNotice(title, text);
 
   return redirectTo(new URL("/admin?updated=1", request.url));
 }

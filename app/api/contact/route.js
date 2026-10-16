@@ -1,5 +1,8 @@
-﻿import { NextResponse } from "next/server";
-import { sendMail } from "@/lib/mailer";
+import { NextResponse } from "next/server";
+import { sendTemplateMail } from "@/lib/mail-templates";
+
+const SUBJECTS = ["Trimsalon", "Bodywork"];
+const EMAIL = /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/;
 
 function redirectTo(url) {
   return NextResponse.redirect(url, 303);
@@ -7,36 +10,38 @@ function redirectTo(url) {
 
 export async function POST(request) {
   const formData = await request.formData();
-  const naam = String(formData.get("naam") || "").trim();
-  const emailadres = String(formData.get("emailadres") || "").trim();
+  const naam = String(formData.get("naam") || "").trim().slice(0, 100);
+  const emailadres = String(formData.get("emailadres") || "").trim().slice(0, 200);
   const onderwerp = String(formData.get("onderwerp") || "").trim();
-  const bericht = String(formData.get("bericht") || "").trim();
+  const bericht = String(formData.get("bericht") || "").trim().slice(0, 5000);
 
   const baseUrl = new URL("/contact", request.url);
 
-  if (!naam || !emailadres || !onderwerp || !bericht) {
+  if (!naam || !EMAIL.test(emailadres) || !SUBJECTS.includes(onderwerp) || !bericht) {
     baseUrl.searchParams.set("status", "error");
     return redirectTo(baseUrl);
   }
 
   try {
-    await sendMail({
+    await sendTemplateMail("contact_notification", {
       to: process.env.CONTACT_TO_EMAIL || "tsnuffeltje@gmail.com",
-      subject: "Mail via formulier",
-      text: `Iemand heeft het contactformulier ingevuld.\n\nNaam: ${naam}\nE-mail: ${emailadres}\nOnderwerp: ${onderwerp}\nBericht: ${bericht}`,
-      html: `
-        <p>Iemand heeft het contactformulier ingevuld.</p>
-        <p><strong>Naam:</strong> ${naam}</p>
-        <p><strong>E-mail:</strong> ${emailadres}</p>
-        <p><strong>Onderwerp:</strong> ${onderwerp}</p>
-        <p><strong>Bericht:</strong><br>${bericht.replace(/\n/g, "<br>")}</p>
-      `
+      replyTo: emailadres,
+      values: { naam, email: emailadres, onderwerp, bericht }
     });
-
-    baseUrl.searchParams.set("status", "success");
-    return redirectTo(baseUrl);
   } catch {
     baseUrl.searchParams.set("status", "error");
     return redirectTo(baseUrl);
   }
+
+  try {
+    await sendTemplateMail("contact_confirmation", {
+      to: emailadres,
+      values: { naam, onderwerp }
+    });
+  } catch {
+    // De melding naar het salon is wel vertrokken; een mislukte bevestiging is geen fout voor de bezoeker.
+  }
+
+  baseUrl.searchParams.set("status", "success");
+  return redirectTo(baseUrl);
 }

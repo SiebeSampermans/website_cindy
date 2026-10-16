@@ -1,4 +1,4 @@
-﻿import bcrypt from "bcryptjs";
+import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import { getUserIdByResetToken, updateUserPassword } from "@/lib/db";
 
@@ -14,8 +14,8 @@ export async function POST(request) {
   const redirectUrl = new URL("/admin/reset-password", request.url);
   redirectUrl.searchParams.set("token", token);
 
-  if (!token || !password) {
-    redirectUrl.searchParams.set("status", "invalid");
+  if (!token || password.length < 8) {
+    redirectUrl.searchParams.set("status", token ? "short" : "invalid");
     return redirectTo(redirectUrl);
   }
 

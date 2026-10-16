@@ -124,7 +124,7 @@ export function CircularGallery({ images }) {
             >
               {orbitItems.map((image) => (
                 <button
-                  key={image.thumb}
+                  key={`${image.index}-${image.thumb}`}
                   type="button"
                   className={image.isActive ? "gallery-orb is-active" : "gallery-orb"}
                   style={{ "--orbit-angle": `${image.angle}deg` }}
